@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Colégio Adventista da Liberdade</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <img src="images/logo.jpg" alt="Logo CAL" class="logo-image">
+                <h1>Colégio Adventista da Liberdade</h1>
+            </div>
+
+            <h2>Criar Conta</h2>
+            <p class="auth-subtitle">Registre-se para acessar o sistema</p>
+
+            <!-- Mensagens de alerta -->
+            <div id="mensagem" class="alert alert-success" style="display:none;">
+                <i class="fas fa-check-circle"></i> Conta criada com sucesso! 
+                <a href="login.html">Fazer login</a>
+            </div>
+            <div id="erro" class="alert alert-error" style="display:none;">
+                <i class="fas fa-exclamation-circle"></i> Erro ao criar conta.
+            </div>
+
+            <form id="formRegistro" class="auth-form">
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmar_senha">Confirmar Senha</label>
+                    <input type="password" id="confirmar_senha" name="confirmar_senha" required minlength="6">
+                </div>
+
+                <button type="submit" class="btn-primary btn-full">Criar Conta</button>
+            </form>
+
+            <p class="auth-link">
+                Já tem uma conta? <a href="login.html">Faça login</a>
+            </p>
+
+            <p class="auth-link">
+                <a href="index.html">← Voltar para o início</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Simula armazenamento de usuários no navegador
+        const form = document.getElementById('formRegistro');
+        const msgSucesso = document.getElementById('mensagem');
+        const msgErro = document.getElementById('erro');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
+            const confirmar = document.getElementById('confirmar_senha').value;
+
+            msgSucesso.style.display = 'none';
+            msgErro.style.display = 'none';
+
+            if (!nome || !email || !senha || !confirmar) {
+                mostrarErro('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (senha.length < 6) {
+                mostrarErro('A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
+
+            if (senha !== confirmar) {
+                mostrarErro('As senhas não coincidem.');
+                return;
+            }
+
+            // Simulação de "banco de dados" usando localStorage
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+            const existe = usuarios.find(u => u.email === email);
+            if (existe) {
+                mostrarErro('Este e-mail já está cadastrado.');
+                return;
+            }
+
+            // Cria novo "usuário"
+            const novoUsuario = { nome, email, senha };
+            usuarios.push(novoUsuario);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+            mostrarSucesso('Conta criada com sucesso! Você pode fazer login agora.');
+            form.reset();
+        });
+
+        function mostrarErro(texto) {
+            msgErro.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${texto}`;
+            msgErro.style.display = 'block';
+        }
+
+        function mostrarSucesso(texto) {
+            msgSucesso.innerHTML = `<i class="fas fa-check-circle"></i> ${texto} <a href="login.html">Fazer login</a>`;
+            msgSucesso.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
